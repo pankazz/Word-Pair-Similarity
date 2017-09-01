@@ -30,8 +30,8 @@ in grouping or combining"""
 e = d.groupByKey().mapValues(set)
 
 e = e.zipWithIndex()
-#Cartesian would generate 2^n pairs but since we are taking bi-directional equality into consideration we need to find combinations. 
-#we eliminate duplicate data by indexing the rdd and filtering by index.
+#Cartesian would generate 2^n pairs but since I'm taking bi-directional equality into consideration only unique find combinations are required. 
+#Eliminating duplicate data by indexing the rdd and filtering by index.
 wod_pairs = e.cartesian(e).filter(lambda x:x[0][1] <= x[1][1]).map(lambda x:(x[0][0],x[1][0])).map(lambda x:((x[0][0],x[1][0]),(x[0][1],x[1][1])))
 
 word_pair_similarity = wod_pairs.map(lambda x:(x[0],len(x[1][0] & x[1][1])/(len(x[1][0]|x[1][1])*1.0)))
